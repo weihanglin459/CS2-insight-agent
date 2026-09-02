@@ -202,6 +202,8 @@ app.include_router(cosmetics_skin_router)
 app.include_router(config_backup_router)
 app.include_router(gsi_router)
 app.include_router(game_resources_router)
+from app.hud_router import router as hud_router
+app.include_router(hud_router)
 
 app.add_middleware(
     CORSMiddleware,
