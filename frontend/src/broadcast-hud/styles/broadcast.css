@@ -1,0 +1,376 @@
+@import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&display=swap');
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+.broadcast-hud {
+  width: 1920px;
+  height: 1080px;
+  position: relative;
+  font-family: 'Rajdhani', 'Arial', sans-serif;
+  pointer-events: none;
+  user-select: none;
+  overflow: hidden;
+}
+
+/* ========== 等待画面 ========== */
+.hud-waiting {
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  color: rgba(255,255,255,0.5);
+  font-size: 18px;
+  letter-spacing: 2px;
+}
+
+/* ========== 顶部分数板 ========== */
+.scoreboard-top {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: stretch;
+  background: rgba(0,0,0,0.88);
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 30px rgba(0,0,0,0.6);
+  border: 1px solid rgba(255,255,255,0.08);
+}
+
+.team-side {
+  display: flex;
+  align-items: center;
+  padding: 10px 24px;
+  font-weight: 700;
+  font-size: 18px;
+  letter-spacing: 1px;
+  min-width: 160px;
+}
+
+.team-side.ct {
+  background: linear-gradient(135deg, rgba(30,90,150,0.9) 0%, rgba(20,60,100,0.95) 100%);
+  color: #4fc3f7;
+  justify-content: flex-start;
+  gap: 16px;
+}
+
+.team-side.t {
+  background: linear-gradient(135deg, rgba(150,30,30,0.9) 0%, rgba(100,20,20,0.95) 100%);
+  color: #ff6b6b;
+  justify-content: flex-end;
+  gap: 16px;
+}
+
+.team-name {
+  font-size: 14px;
+  opacity: 0.9;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+}
+
+.score {
+  font-size: 32px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.match-center {
+  background: #0c0c0c;
+  padding: 8px 28px;
+  text-align: center;
+  min-width: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-left: 1px solid rgba(255,255,255,0.05);
+  border-right: 1px solid rgba(255,255,255,0.05);
+}
+
+.round-info {
+  font-size: 10px;
+  color: #888;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+
+.timer {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+  line-height: 1;
+}
+
+.timer.bomb-active {
+  color: #ff4444;
+  animation: bombPulse 1s infinite;
+}
+
+@keyframes bombPulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.phase-text {
+  font-size: 10px;
+  color: #666;
+  margin-top: 2px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+/* ========== 击杀提示 ========== */
+.kill-feed {
+  position: absolute;
+  top: 70px;
+  right: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: flex-end;
+}
+
+.kill-entry {
+  background: rgba(0,0,0,0.8);
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-size: 13px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  animation: slideIn 0.3s ease;
+  border-right: 3px solid transparent;
+}
+
+@keyframes slideIn {
+  from { opacity: 0; transform: translateX(20px); }
+  to { opacity: 1; transform: translateX(0); }
+}
+
+.kill-entry .killer { color: #4fc3f7; font-weight: 600; }
+.kill-entry .victim { color: #ff6b6b; font-weight: 600; }
+.kill-entry .weapon { color: #888; font-size: 11px; }
+.kill-entry .headshot { color: #ffd700; font-size: 10px; margin-left: 4px; }
+
+/* ========== 底部玩家条 ========== */
+.player-bars-wrapper {
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  align-items: flex-end;
+  gap: 3px;
+  padding-bottom: 12px;
+}
+
+.player-bar {
+  display: flex;
+  gap: 3px;
+}
+
+/* ========== 玩家卡片 ========== */
+.player-card {
+  width: 128px;
+  background: rgba(0,0,0,0.9);
+  border-radius: 6px 6px 0 0;
+  overflow: hidden;
+  position: relative;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  border-bottom: 3px solid transparent;
+}
+
+.player-bar.team-ct .player-card { border-bottom-color: #4fc3f7; }
+.player-bar.team-t .player-card { border-bottom-color: #ff6b6b; }
+
+.player-card.dead {
+  opacity: 0.35;
+  filter: grayscale(1);
+  transform: scale(0.95);
+}
+
+.player-card.spectated {
+  transform: scale(1.06);
+  z-index: 20;
+  box-shadow: 0 -4px 20px rgba(255,255,255,0.1);
+}
+
+.card-header {
+  position: relative;
+  height: 68px;
+  background: linear-gradient(180deg, rgba(255,255,255,0.04) 0%, transparent 60%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #333 0%, #222 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid rgba(255,255,255,0.15);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+}
+
+.avatar-initial {
+  font-size: 20px;
+  font-weight: 700;
+  color: rgba(255,255,255,0.6);
+}
+
+.hp-text {
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  text-shadow: 0 1px 4px rgba(0,0,0,0.9);
+  font-variant-numeric: tabular-nums;
+}
+
+.hp-text.low { color: #ff4444; }
+
+.player-name {
+  text-align: center;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 4px 2px;
+  color: #fff;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  letter-spacing: 0.5px;
+}
+
+.stats-row {
+  display: flex;
+  justify-content: center;
+  padding: 2px 0;
+}
+
+.stat-item {
+  font-size: 10px;
+  color: #aaa;
+}
+
+.money-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 3px 8px;
+  background: rgba(255,255,255,0.03);
+  border-top: 1px solid rgba(255,255,255,0.04);
+}
+
+.armor-icon { font-size: 10px; }
+.money {
+  font-size: 11px;
+  color: #5cff5c;
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+.weapon-row {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 4px 0 6px;
+  gap: 2px;
+}
+
+.weapon-name {
+  font-size: 10px;
+  color: #ccc;
+  font-weight: 500;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* ========== 观察者卡片 ========== */
+.spectator-card {
+  width: 155px;
+  background: rgba(0,0,0,0.93);
+  border-radius: 6px 6px 0 0;
+  border-bottom: 3px solid #ffd700;
+  margin: 0 6px;
+  position: relative;
+  box-shadow: 0 -4px 20px rgba(255,215,0,0.08);
+}
+
+.spectator-card.empty {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.spectator-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  background: rgba(255,215,0,0.08);
+  border-bottom: 1px solid rgba(255,215,0,0.15);
+}
+
+.spec-name {
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffd700;
+  letter-spacing: 0.5px;
+}
+
+.spec-hp {
+  font-size: 16px;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.spec-hp.low { color: #ff4444; }
+
+.spec-stats {
+  display: flex;
+  justify-content: space-around;
+  padding: 8px 0;
+}
+
+.spec-stat {
+  text-align: center;
+}
+
+.spec-stat .label {
+  display: block;
+  font-size: 9px;
+  color: #666;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-bottom: 2px;
+}
+
+.spec-stat .value {
+  font-size: 14px;
+  font-weight: 700;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
+
+.spec-weapon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 6px 0 10px;
+  gap: 4px;
+  border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.spec-weapon .ammo {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  font-variant-numeric: tabular-nums;
+}
